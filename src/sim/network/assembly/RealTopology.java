@@ -282,17 +282,29 @@ public class RealTopology {
 				if (!this.peerMap.containsKey(first)) {
 					this.peerMap.put(first, new HashSet<Integer>());
 				}
+				if(!this.peerMap.containsKey(second)){
+					this.peerMap.put(second, new HashSet<Integer>());
+				}
 				this.peerMap.get(first).add(second);
+				this.peerMap.get(second).add(first);
 			} else if (rel == 1) {
 				if (!this.providerMap.containsKey(first)) {
 					this.providerMap.put(first, new HashSet<Integer>());
 				}
+				if(!this.customerMap.containsKey(second)){
+					this.customerMap.put(second, new HashSet<Integer>());
+				}
 				this.providerMap.get(first).add(second);
+				this.customerMap.get(second).add(first);
 			} else if (rel == -1) {
 				if (!this.customerMap.containsKey(first)) {
 					this.customerMap.put(first, new HashSet<Integer>());
 				}
+				if(!this.providerMap.containsKey(second)){
+					this.providerMap.put(second, new HashSet<Integer>());
+				}
 				this.customerMap.get(first).add(second);
+				this.providerMap.get(second).add(first);
 			}
 		}
 		relBuff.close();
