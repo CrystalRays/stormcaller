@@ -14,6 +14,10 @@ public class RealTopology {
 	private HashMap<Integer, AS> asMap;
 
 	private HashMap<Integer, HashSet<Integer>> peerMap;
+	
+	/**
+	 * Map containing a set of CUSTOMERS of the KEY VALUE as
+	 */
 	private HashMap<Integer, HashSet<Integer>> customerMap;
 	private HashMap<Integer, HashSet<Integer>> providerMap;
 
@@ -266,7 +270,7 @@ public class RealTopology {
 			/*
 			 * Pull out the tokens
 			 */
-			StringTokenizer tokens = new StringTokenizer(poll, " ");
+			StringTokenizer tokens = new StringTokenizer(poll, "|");
 			int first = Integer.parseInt(tokens.nextToken().trim());
 			int second = Integer.parseInt(tokens.nextToken().trim());
 			int rel = Integer.parseInt(tokens.nextToken().trim());
@@ -279,12 +283,12 @@ public class RealTopology {
 					this.peerMap.put(first, new HashSet<Integer>());
 				}
 				this.peerMap.get(first).add(second);
-			} else if (rel == -1) {
+			} else if (rel == 1) {
 				if (!this.providerMap.containsKey(first)) {
 					this.providerMap.put(first, new HashSet<Integer>());
 				}
 				this.providerMap.get(first).add(second);
-			} else if (rel == 1) {
+			} else if (rel == -1) {
 				if (!this.customerMap.containsKey(first)) {
 					this.customerMap.put(first, new HashSet<Integer>());
 				}
