@@ -134,6 +134,7 @@ public class SimDriver implements Runnable, SimAgent {
 		System.out.println("sim done at: " + runTime);
 		theDriver.logger.logMessage("sim done at: " + runTime, false);
 		theDriver.cleanUp(SimDriver.DEBUG);
+		theDriver.dumpMemLoads();
 
 		if (!theFactory.getUsedSerialString()) {
 			theDriver.doSerialDump(configFile.getValue(logFile));
@@ -392,6 +393,19 @@ public class SimDriver implements Runnable, SimAgent {
 			}
 		}
 		this.logger.doneLogging();
+	}
+	
+	private void dumpMemLoads(){
+		List<Long> memList = new ArrayList<Long>();
+		for(Router tRouter: this.routerMap.values()){
+			memList.add(tRouter.getMemoryLoad());
+		}
+		
+		try {
+			Stats.dumpLongCDF(SimLogger.DIR + "mem.csv", memList);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void giveEvent(SimEvent theEvent) {

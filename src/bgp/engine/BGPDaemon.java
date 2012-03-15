@@ -1177,4 +1177,14 @@ public class BGPDaemon {
 
 		this.logger.logMessage(LoggingMessages.DISTANCE_DUMP_STOP, false);
 	}
+
+	/**
+	 * Used to fetch the entire adjIn rib, which we base our memory load
+	 * calculations off of.
+	 * 
+	 * @return a list of all routes in the adjIn RIB, do NOT modify these
+	 */
+	public List<Route> getAllStoredRoutes() {
+		return this.adjInRIB.fetchWholeTable();
+	}
 }

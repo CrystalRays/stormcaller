@@ -403,14 +403,13 @@ public class Router implements SimAgent {
 						timeSpent = this.packetProcessTime;
 					}
 					this.cpuWindow = this.theDriver.getCurrentTime() + (int) Math.round(timeSpent);
-				}
-				else{
+				} else {
 					this.cpuWindow = this.theDriver.getCurrentTime() + 1;
 				}
 			}
 			/*
-			 *  TODO can the event ever be before, right now it looks like we're
-			 *  just throwing the event away
+			 * TODO can the event ever be before, right now it looks like we're
+			 * just throwing the event away
 			 */
 
 			/*
@@ -626,5 +625,41 @@ public class Router implements SimAgent {
 
 	public void notifySessionFail(int rhs, int time) {
 		this.theDriver.notifyBotSessionFailHack(this.asn, rhs, time);
+	}
+
+	public long getMemoryLoad() {
+
+		long memLoad = 0;
+
+		/*
+		 * Fetch the routes we have in the rib
+		 */
+		List<Route> inRibDump = this.bgpDaemon.getAllStoredRoutes();
+
+		/*
+		 * Compute the amount of memory consumed based off of path size
+		 */
+		//TODO check logs from meds for mem vs path length
+		//XXX temp hack
+		memLoad += inRibDump.size() * 600;
+
+		/*
+		 * Add on additonal pointer overhead for multiple routes sharing an AS
+		 * path (route weighting)
+		 */
+		//XXX make not a constant hard coded here?
+		for (Route tRoute : inRibDump) {
+			Integer weight = this.asWeights.get(this.netToASMappings.get(tRoute.getNlri()));
+			if (weight != null) {
+				memLoad += weight.longValue() * 440;
+			}
+		}
+
+		/*
+		 * I/O buffers
+		 */
+		//TODO buzzzzah?
+
+		return memLoad;
 	}
 }
