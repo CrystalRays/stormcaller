@@ -94,8 +94,8 @@ public class BGPDaemon {
 	private int wallTime;
 
 	/**
-	 * Timere used to show when the advertisement epoch has started and we
-	 * should start pushing any dirty routes as fast as we can
+	 * Timer used to show when the advertisement epoch has started and we should
+	 * start pushing any dirty routes as fast as we can
 	 */
 	private int advWindowExp;
 
@@ -168,7 +168,11 @@ public class BGPDaemon {
 
 	private static final int RFDCHECK = 5000;
 
-	private static final int ADVWINDOW = 10000;
+	/**
+	 * The number of routes we can send during an advertisement window
+	 */
+	//TODO this should be based on mrai (i.e. the size should vary)
+	private static final int ADVWINDOW = 20000;
 
 	/**
 	 * Offset for random numbers used for peer IDs.
@@ -195,15 +199,15 @@ public class BGPDaemon {
 	 * @param logger
 	 *            - the logger we're using
 	 */
-	public BGPDaemon(BGPLocalLoader localRouteGen, int myASN, Router router,
-			List<String> importStrings, List<String> exportStrings,
-			List<String> rfdStrings, int keepAlive, int haltTimer, int mrai,
+	public BGPDaemon(BGPLocalLoader localRouteGen, int myASN, Router router, List<String> importStrings,
+			List<String> exportStrings, List<String> rfdStrings, int keepAlive, int haltTimer, int mrai,
 			SimLogger logger) {
 		List<Update> igpUpdates;
 
 		// setup the vast bulk of this daemon
-		this.initStructures(myASN, keepAlive, haltTimer, mrai, importStrings,
-				exportStrings, rfdStrings, router, logger);
+		this
+				.initStructures(myASN, keepAlive, haltTimer, mrai, importStrings, exportStrings, rfdStrings, router,
+						logger);
 
 		// setup our RIBs correctly
 		this.adjInRIB = new RoutingBase(true, true);
@@ -217,13 +221,13 @@ public class BGPDaemon {
 		}
 	}
 
-	public BGPDaemon(int myASN, Router router, List<String> importStrings,
-			List<String> exportStrings, List<String> rfdStrings, int keepAlive,
-			int haltTimer, int mrai, SimLogger logger, String serialString) {
+	public BGPDaemon(int myASN, Router router, List<String> importStrings, List<String> exportStrings,
+			List<String> rfdStrings, int keepAlive, int haltTimer, int mrai, SimLogger logger, String serialString) {
 
 		// setup the vast bulk of this daemon
-		this.initStructures(myASN, keepAlive, haltTimer, mrai, importStrings,
-				exportStrings, rfdStrings, router, logger);
+		this
+				.initStructures(myASN, keepAlive, haltTimer, mrai, importStrings, exportStrings, rfdStrings, router,
+						logger);
 
 		/*
 		 * Let the serial file parsing begin!
@@ -237,8 +241,7 @@ public class BGPDaemon {
 			if (subPoll.length() > 0) {
 				StringTokenizer bottomTokens = new StringTokenizer(subPoll, "#");
 				int asExt = Integer.parseInt(bottomTokens.nextToken());
-				this.asToPeerMap.put(asExt, Integer.parseInt(bottomTokens
-						.nextToken()));
+				this.asToPeerMap.put(asExt, Integer.parseInt(bottomTokens.nextToken()));
 				this.asConTimeMap.put(asExt, 0);
 				this.lastSeenMap.put(asExt, 0);
 				this.keepAliveMap.put(asExt, 0);
@@ -269,9 +272,8 @@ public class BGPDaemon {
 	 * @param exportStrings
 	 *            - the list of export policy config strings
 	 */
-	private void initStructures(int myASN, int keepAlive, int haltTimer,
-			int mrai, List<String> importStrings, List<String> exportStrings,
-			List<String> rfdStrings, Router theRouter, SimLogger theLogger) {
+	private void initStructures(int myASN, int keepAlive, int haltTimer, int mrai, List<String> importStrings,
+			List<String> exportStrings, List<String> rfdStrings, Router theRouter, SimLogger theLogger) {
 		// setup logger, rng, remember our home router & ASN
 		this.logger = theLogger;
 		this.rand = new Random(myASN + BGPDaemon.RANDOFFSET);
@@ -358,8 +360,7 @@ public class BGPDaemon {
 		// dump connected/pending peers
 		retString += "connected ASNs:\n";
 		for (int tASN : this.asToPeerMap.keySet()) {
-			retString += "\t" + tASN + " - " + this.asToPeerMap.get(tASN)
-					+ "\n";
+			retString += "\t" + tASN + " - " + this.asToPeerMap.get(tASN) + "\n";
 		}
 		retString += "pending peers:\n\t";
 		for (int tASN : this.pendingPeers) {
@@ -367,8 +368,7 @@ public class BGPDaemon {
 		}
 		retString = retString.substring(0, retString.length() - 1) + "\n";
 
-		retString += "pending BGP message count: " + this.messageQueue.size()
-				+ "\n";
+		retString += "pending BGP message count: " + this.messageQueue.size() + "\n";
 
 		retString += "*******************\n";
 		return retString;
@@ -408,8 +408,7 @@ public class BGPDaemon {
 				 * we just recieved an Update from a BGP speaker we're not
 				 * connected to, simply drop it
 				 */
-				System.err.println("updated from UNKNOWN PEER me: "
-						+ this.myASN + " : " + inUpdate.getSrcId());
+				System.err.println("updated from UNKNOWN PEER me: " + this.myASN + " : " + inUpdate.getSrcId());
 				return;
 			}
 		}
@@ -428,8 +427,7 @@ public class BGPDaemon {
 		 */
 		advertisedRoute = inUpdate.getAdvertised();
 		if (advertisedRoute != null) {
-			if (this.adjInRIB.withdrawRoute(advertisedRoute.getNlri(),
-					advertisedRoute.getSrcId())) {
+			if (this.adjInRIB.withdrawRoute(advertisedRoute.getNlri(), advertisedRoute.getSrcId())) {
 				networksToRecalc.add(advertisedRoute.getNlri());
 			}
 			advertisedRoute = this.importDriver.runImportSpec(advertisedRoute);
@@ -504,12 +502,10 @@ public class BGPDaemon {
 		 */
 		for (Route tRoute : routesToExport) {
 
-			exportAdditions = this.exportDriver.runExportSpec(tRoute,
-					this.asToPeerMap.keySet());
+			exportAdditions = this.exportDriver.runExportSpec(tRoute, this.asToPeerMap.keySet());
 
 			for (int tASN : exportAdditions.keySet()) {
-				if (this.adjOutRIB
-						.installRoute(exportAdditions.get(tASN), tASN)) {
+				if (this.adjOutRIB.installRoute(exportAdditions.get(tASN), tASN)) {
 					if (this.runMRAICheck(tRoute.getNlri(), tASN)) {
 						this.sendAdvertisement(exportAdditions.get(tASN), tASN);
 					}
@@ -630,8 +626,7 @@ public class BGPDaemon {
 			this.router.sendMessage(foriegnASN, connectMsg);
 		} else {
 			try {
-				throw new Exception(
-						"fairly sure this should never happen, yelling lowdly in connectBGPPeer");
+				throw new Exception("fairly sure this should never happen, yelling lowdly in connectBGPPeer");
 			} catch (Exception e) {
 				e.printStackTrace();
 				System.exit(-1);
@@ -743,10 +738,8 @@ public class BGPDaemon {
 			}
 			this.processUpdate(fakeUpdate);
 		} else {
-			System.err
-					.println("removing network without networks advertised to us");
-			System.err.println("me: " + this.myASN + " him " + asn + " time "
-					+ this.wallTime + " conn started "
+			System.err.println("removing network without networks advertised to us");
+			System.err.println("me: " + this.myASN + " him " + asn + " time " + this.wallTime + " conn started "
 					+ this.asConTimeMap.get(asn));
 		}
 
@@ -762,10 +755,8 @@ public class BGPDaemon {
 				this.adjOutRIB.withdrawRoute(tRoute.getNlri(), asn);
 			}
 		} else {
-			System.err
-					.println("removing network without networks advertised to him");
-			System.err.println("me: " + this.myASN + " him " + asn + " time "
-					+ this.wallTime + " conn started "
+			System.err.println("removing network without networks advertised to him");
+			System.err.println("me: " + this.myASN + " him " + asn + " time " + this.wallTime + " conn started "
 					+ this.asConTimeMap.get(asn));
 		}
 
@@ -778,8 +769,7 @@ public class BGPDaemon {
 
 		// start up a reconnect timer for the defined interval
 		if (addJitter) {
-			this.reconnectMap.put(asn, this.wallTime + BGPDaemon.RECONNECT
-					+ 1000);
+			this.reconnectMap.put(asn, this.wallTime + BGPDaemon.RECONNECT + 1000);
 		} else {
 			this.reconnectMap.put(asn, this.wallTime + BGPDaemon.RECONNECT);
 		}
@@ -843,9 +833,7 @@ public class BGPDaemon {
 				 * check if we're actually connected to the peer that just sent
 				 * us a message, if not ignore anything they say till reconnect
 				 */
-				if (pollMessage.getSrcASN() != 0
-						&& !this.asToPeerMap.containsKey(pollMessage
-								.getSrcASN())) {
+				if (pollMessage.getSrcASN() != 0 && !this.asToPeerMap.containsKey(pollMessage.getSrcASN())) {
 					continue;
 				}
 
@@ -855,8 +843,7 @@ public class BGPDaemon {
 				 * that's a bad thing (it's a message from a past session, we
 				 * need to ignore it.
 				 */
-				if (pollMessage.getTimeStamp() < this.asConTimeMap
-						.get(pollMessage.getSrcASN())) {
+				if (pollMessage.getTimeStamp() < this.asConTimeMap.get(pollMessage.getSrcASN())) {
 					continue;
 				}
 			}
@@ -868,23 +855,16 @@ public class BGPDaemon {
 			if (pollMessage.getMessageType() == Constants.BGP_UPDATE) {
 				Update incUpdate = (Update) pollMessage;
 				if (this.rfdFlag) {
-					Update delayUpdate = new Update(incUpdate.getSrcId(),
-							incUpdate.getTimeStamp());
+					Update delayUpdate = new Update(incUpdate.getSrcId(), incUpdate.getTimeStamp());
 					for (CIDR tNetwork : incUpdate.getWithdraws()) {
-						this.rfdTable.routeWithdrawn(incUpdate.getSrcId(),
-								tNetwork, this.wallTime);
+						this.rfdTable.routeWithdrawn(incUpdate.getSrcId(), tNetwork, this.wallTime);
 					}
 					if (incUpdate.getAdvertised() != null) {
-						if (!this.rfdTable.routeAdvertised(
-								incUpdate.getSrcId(), incUpdate.getAdvertised()
-										.getNlri(), this.wallTime)) {
-							delayUpdate
-									.setAdvertised(incUpdate.getAdvertised());
-							this.dampenedUpdates.put(
-									DampeningTable.genKeyString(incUpdate
-											.getSrcId(), incUpdate
-											.getAdvertised().getNlri()),
-									delayUpdate);
+						if (!this.rfdTable.routeAdvertised(incUpdate.getSrcId(), incUpdate.getAdvertised().getNlri(),
+								this.wallTime)) {
+							delayUpdate.setAdvertised(incUpdate.getAdvertised());
+							this.dampenedUpdates.put(DampeningTable.genKeyString(incUpdate.getSrcId(), incUpdate
+									.getAdvertised().getNlri()), delayUpdate);
 							incUpdate.clearAdvertised();
 						}
 					}
@@ -914,18 +894,13 @@ public class BGPDaemon {
 					if (this.asToPeerMap.containsKey(connMessage.getSrcASN())) {
 						Error errorMessage;
 
-						this.logger.logMessage(
-								LoggingMessages.ROUTER_ALREADY_CONN
-										+ connMessage.getSrcASN()
-										+ LoggingMessages.AT + this.myASN,
-								false);
+						this.logger.logMessage(LoggingMessages.ROUTER_ALREADY_CONN + connMessage.getSrcASN()
+								+ LoggingMessages.AT + this.myASN, false);
 						this.runPeerRemoval(connMessage.getSrcASN(), false);
 
 						// send notification
-						errorMessage = new Error(this.myASN, this.wallTime,
-								LoggingMessages.ROUTER_ALREADY_CONN);
-						this.router.sendMessage(connMessage.getSrcASN(),
-								errorMessage);
+						errorMessage = new Error(this.myASN, this.wallTime, LoggingMessages.ROUTER_ALREADY_CONN);
+						this.router.sendMessage(connMessage.getSrcASN(), errorMessage);
 						continue;
 					}
 
@@ -938,19 +913,16 @@ public class BGPDaemon {
 					}
 
 					outMessage = new Connect(this.myASN, this.wallTime, 2);
-					this.router
-							.sendMessage(connMessage.getSrcASN(), outMessage);
+					this.router.sendMessage(connMessage.getSrcASN(), outMessage);
 					this.handShakeHelper(connMessage.getSrcASN());
 				} else if (connMessage.isSynAck()) {
 					outMessage = new Connect(this.myASN, this.wallTime, 3);
-					this.router
-							.sendMessage(connMessage.getSrcASN(), outMessage);
+					this.router.sendMessage(connMessage.getSrcASN(), outMessage);
 					this.handShakeHelper(connMessage.getSrcASN());
 				} else if (connMessage.isAck()) {
 					this.handShakeHelper(connMessage.getSrcASN());
 				} else {
-					System.err
-							.println("this should never happen in handle message - conn message");
+					System.err.println("this should never happen in handle message - conn message");
 					System.exit(-3);
 				}
 				ranUpdate = false;
@@ -959,12 +931,9 @@ public class BGPDaemon {
 				 * We have an error, log it, and remove them from our world
 				 * view, then try to reconnect
 				 */
-				this.logger.logMessage(LoggingMessages.ERROR_MSG
-						+ ((Error) pollMessage).getReason()
-						+ pollMessage.getSrcASN() + LoggingMessages.AT
-						+ this.myASN, false);
-				List<CIDR> removedNets = this.runPeerRemoval(pollMessage
-						.getSrcASN(), true);
+				this.logger.logMessage(LoggingMessages.ERROR_MSG + ((Error) pollMessage).getReason()
+						+ pollMessage.getSrcASN() + LoggingMessages.AT + this.myASN, false);
+				List<CIDR> removedNets = this.runPeerRemoval(pollMessage.getSrcASN(), true);
 
 				/*
 				 * Store the nets touched for correct CPU book-keeping
@@ -975,8 +944,7 @@ public class BGPDaemon {
 
 				ranUpdate = true;
 			} else {
-				System.err.println("ZOMG UNKNOWN MESSAGE TYPE: "
-						+ pollMessage.getMessageType());
+				System.err.println("ZOMG UNKNOWN MESSAGE TYPE: " + pollMessage.getMessageType());
 				System.exit(-3);
 			}
 		}
@@ -1021,51 +989,55 @@ public class BGPDaemon {
 		 */
 		for (int tASN : this.keepAliveMap.keySet()) {
 			if ((this.wallTime - this.keepAliveMap.get(tASN)) >= this.keepaliveTimer) {
-				this.router.sendMessage(tASN, new KeepAlive(this.myASN,
-						this.wallTime));
+				this.router.sendMessage(tASN, new KeepAlive(this.myASN, this.wallTime));
 				this.keepAliveMap.put(tASN, this.wallTime);
 			}
 		}
 
 		/*
-		 * Any routes we've wanted to advertise, but couldn't because of MRAI
-		 * should be advertised now
+		 * Deal with an advertisement window, sending any pending routes
 		 */
-		//FIXME this section needs to be updated to the new method
+		//XXX this could be a more "sloped" - over time - advertisement
+		//XXX CPU usage?
 		if (this.wallTime >= this.advWindowExp) {
-			while (this.mraiPendingRoutes.size() > 0) {
-				mraiKeyString = this.mraiPendingRoutes.peek();
-				if (this.advertisementAllowedMap.get(mraiKeyString) <= this.wallTime) {
-					this.mraiPendingRoutes.poll();
-					this.dirtyRoutes.remove(mraiKeyString);
-					mraiAS = Integer.parseInt(mraiKeyString.substring(0,
-							mraiKeyString.indexOf(":")));
-					mraiCIDR = new CIDR(mraiKeyString.substring(mraiKeyString
-							.indexOf(":") + 1));
-
-					/*
-					 * If we're not currently connected then don't send the
-					 * update
-					 */
-					if (!this.asConTimeMap.containsKey(mraiAS)) {
-						continue;
-					}
-
-					/*
-					 * Fetch the route, if the route is null withdraw it,
-					 * otherwise advertise it
-					 */
-					mraiRoute = this.adjOutRIB.fetchRoute(mraiCIDR, mraiAS);
-					if (mraiRoute == null) {
-						this.sendWithdrawl(mraiCIDR, mraiAS);
-					} else {
-						this.sendAdvertisement(mraiRoute, mraiAS);
-					}
-				} else {
+			for (int advCounter = 0; advCounter < BGPDaemon.ADVWINDOW; advCounter++) {
+				/*
+				 * Stop sending if the queue is empty
+				 */
+				if (this.mraiPendingRoutes.size() == 0) {
 					break;
 				}
+
+				/*
+				 * Grab the next route, and take it out of the dirty set
+				 */
+				mraiKeyString = this.mraiPendingRoutes.poll();
+				this.dirtyRoutes.remove(mraiKeyString);
+
+				/*
+				 * Decompose the key
+				 */
+				mraiAS = Integer.parseInt(mraiKeyString.substring(0, mraiKeyString.indexOf(":")));
+				mraiCIDR = new CIDR(mraiKeyString.substring(mraiKeyString.indexOf(":") + 1));
+
+				/*
+				 * If we're not currently connected then don't send the update
+				 */
+				if (!this.asConTimeMap.containsKey(mraiAS)) {
+					continue;
+				}
+
+				/*
+				 * Fetch the route, if the route is null withdraw it, otherwise
+				 * advertise it
+				 */
+				mraiRoute = this.adjOutRIB.fetchRoute(mraiCIDR, mraiAS);
+				if (mraiRoute == null) {
+					this.sendWithdrawl(mraiCIDR, mraiAS);
+				} else {
+					this.sendAdvertisement(mraiRoute, mraiAS);
+				}
 			}
-			
 			this.advWindowExp += this.mrai;
 		}
 
@@ -1077,14 +1049,12 @@ public class BGPDaemon {
 			if ((this.wallTime - this.lastSeenMap.get(tASN)) >= this.haltTimer) {
 				// send notification
 				this.router.clearTCPStack(tASN);
-				errorMessage = new Error(this.myASN, this.wallTime,
-						LoggingMessages.ROUTER_TIMEOUT);
+				errorMessage = new Error(this.myASN, this.wallTime, LoggingMessages.ROUTER_TIMEOUT);
 				this.router.notifySessionFail(tASN, this.wallTime);
 				this.router.sendMessage(tASN, errorMessage);
 
 				// log & remove
-				this.logger.logMessage(LoggingMessages.ROUTER_TIMEOUT + tASN
-						+ LoggingMessages.AT + this.myASN, false);
+				this.logger.logMessage(LoggingMessages.ROUTER_TIMEOUT + tASN + LoggingMessages.AT + this.myASN, false);
 				this.runPeerRemoval(tASN, false);
 
 				// we now wait for the peer that timed out to re-connect to us
@@ -1099,8 +1069,7 @@ public class BGPDaemon {
 		 */
 		for (int tASN : this.reconnectMap.keySet()) {
 			if (this.reconnectMap.get(tASN) == this.wallTime) {
-				this.logger.logMessage(LoggingMessages.RECONNECT + tASN
-						+ LoggingMessages.AT + this.myASN, false);
+				this.logger.logMessage(LoggingMessages.RECONNECT + tASN + LoggingMessages.AT + this.myASN, false);
 				this.connectBGPPeer(tASN);
 				removeSet.add(tASN);
 			}
@@ -1139,12 +1108,8 @@ public class BGPDaemon {
 				mostRecent = tTime;
 			}
 		}
-		//TODO this needs to change to be a single route adv timer
-		if (this.mraiPendingRoutes.size() > 0) {
-			if (this.advertisementAllowedMap.get(this.mraiPendingRoutes.peek()) < mostRecent) {
-				mostRecent = this.advertisementAllowedMap
-						.get(this.mraiPendingRoutes.peek());
-			}
+		if (this.advWindowExp < mostRecent) {
+			mostRecent = this.advWindowExp;
 		}
 		if (this.rfdFlag) {
 			if (this.dampenCheckTimer + BGPDaemon.RFDCHECK < mostRecent) {
@@ -1203,13 +1168,11 @@ public class BGPDaemon {
 	public void logRouteDistances() {
 		List<Route> fullList;
 
-		this.logger.logMessage(
-				LoggingMessages.DISTANCE_DUMP_START + this.myASN, false);
+		this.logger.logMessage(LoggingMessages.DISTANCE_DUMP_START + this.myASN, false);
 
 		fullList = this.localRIB.fetchWholeTable();
 		for (Route tRoute : fullList) {
-			this.logger.logMessage(tRoute.getAsPath().length
-					+ LoggingMessages.TO + tRoute.getNlri().toString(), false);
+			this.logger.logMessage(tRoute.getAsPath().length + LoggingMessages.TO + tRoute.getNlri().toString(), false);
 		}
 
 		this.logger.logMessage(LoggingMessages.DISTANCE_DUMP_STOP, false);
