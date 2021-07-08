@@ -39,7 +39,7 @@ public class LiveViewDriver extends JComponent {
 	private HashMap<Integer, Color> circleColor;
 
 	public static void main(String argv[]) throws InterruptedException, IOException {
-		LiveViewDriver me = new LiveViewDriver(new Cluster("src/liveView/link.txt", "src/liveView/rank.txt"),
+		LiveViewDriver me = new LiveViewDriver(new Cluster("logs/link.txt", "logs/rank.txt"),
 				new MakespanPlayer("logs/testlogMA.csv"));
 		JFrame frame = new JFrame("LiveView");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

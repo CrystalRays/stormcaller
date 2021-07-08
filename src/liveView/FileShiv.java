@@ -13,13 +13,13 @@ public class FileShiv {
 				"OC48", "OC192", "OC768");
 		HashMap<Integer, AS> asMap = builder.getASMap();
 		
-		BufferedWriter rankWriter = new BufferedWriter(new FileWriter("src/liveView/rank.txt"));
+		BufferedWriter rankWriter = new BufferedWriter(new FileWriter("logs/rank.txt"));
 		for(int tAS: asMap.keySet()){
 			rankWriter.write("" + tAS + " " + asMap.get(tAS).getTier() + "\n");
 		}
 		rankWriter.close();
 		
-		BufferedWriter linkWriter = new BufferedWriter(new FileWriter("src/liveView/link.txt"));
+		BufferedWriter linkWriter = new BufferedWriter(new FileWriter("logs/link.txt"));
 		for(int tAS: asMap.keySet()){
 			for(AS tNeighbor: asMap.get(tAS).getAllNeighbors()){
 				linkWriter.write("" + tAS + " " + tNeighbor.getASNumber() + "\n");
