@@ -13,9 +13,9 @@ public class TTPParser {
 	private HashMap<Integer, Integer> posMap;
 
 	public static void main(String[] args) throws IOException {
-		RealTopology tempRTopoBuilder = new RealTopology("/scratch/minerva/schuch/stormcaller/conf/as_rel.txt", true,
+		RealTopology tempRTopoBuilder = new RealTopology("conf/as_rel.txt", true,
 				"OC3", "OC48", "OC192", "OC768");
-		TTPParser obj = new TTPParser("/scratch/minerva/schuch/stormcaller/logs/maxint12largelog", 0.4,
+		TTPParser obj = new TTPParser("logs/maxint12largelog", 0.4,
 				tempRTopoBuilder.getASMap());
 	}
 

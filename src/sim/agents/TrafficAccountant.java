@@ -402,7 +402,7 @@ public class TrafficAccountant implements SimAgent {
 		/*
 		 * If the link is already down, ignore the rest of this
 		 */
-		if (this.messageChance.get(srcAS).get(dstAS) == 0.0) {
+		if (this.messageChance.get(srcAS).get(dstAS)==null||this.messageChance.get(srcAS).get(dstAS) == 0.0) {
 			return;
 		}
 

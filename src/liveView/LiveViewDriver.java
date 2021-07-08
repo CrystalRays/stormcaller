@@ -40,7 +40,7 @@ public class LiveViewDriver extends JComponent {
 
 	public static void main(String argv[]) throws InterruptedException, IOException {
 		LiveViewDriver me = new LiveViewDriver(new Cluster("src/liveView/link.txt", "src/liveView/rank.txt"),
-				new MakespanPlayer("/scratch/arethusa2/schuch/minerva/stormcaller/logs/250klargerlogMA.csv"));
+				new MakespanPlayer("logs/testlogMA.csv"));
 		JFrame frame = new JFrame("LiveView");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().add(me);

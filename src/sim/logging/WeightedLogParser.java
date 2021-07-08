@@ -26,7 +26,7 @@ public class WeightedLogParser {
 	private static final Pattern MAPattern = Pattern.compile("(\\d++)ma(\\d)t(\\d++)f(\\d++)o([0-9\\./]++)");
 	
 	public static void main(String args[]) throws IOException{
-		ASIPParse obj = new ASIPParse("/export/scratch/schuch/lci/routeViews/readable.txt");
+		ASIPParse obj = new ASIPParse("routeViews/readable.txt");
 		WeightedLogParser me = new WeightedLogParser("64klargerlog", obj);
 		me.messageSweep();
 		me.buildCDFs(175000);

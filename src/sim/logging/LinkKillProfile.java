@@ -14,7 +14,7 @@ public class LinkKillProfile {
 	private HashMap<Integer, AS> asMap = null;
 	
 	public LinkKillProfile(String logFile, String targetFile) throws IOException{
-		RealTopology tRT = new RealTopology("/scratch/minerva/schuch/stormcaller/conf/as_rel.txt", true, "OC3", "OC48", "OC768", "OC768");
+		RealTopology tRT = new RealTopology("conf/as_rel.txt", true, "OC3", "OC48", "OC768", "OC768");
 		this.asMap = tRT.getASMap();
 		
 		BufferedReader targetBuff = new BufferedReader(new FileReader(targetFile));
@@ -119,7 +119,7 @@ public class LinkKillProfile {
 	}
 	
 	public static void main(String[] args) throws IOException{
-		LinkKillProfile obj = new LinkKillProfile("/scratch/minerva/schuch/stormcaller/logs/250kfastrouter30secoc768.log", "/scratch/waterhouse/schuch/stormcaller/targets.txt");
+		LinkKillProfile obj = new LinkKillProfile("logs/250kfastrouter30secoc768.log", "targets.txt");
 
 	}
 

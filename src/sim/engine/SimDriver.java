@@ -85,12 +85,17 @@ public class SimDriver implements Runnable, SimAgent {
 		/*
 		 * Load the config file given by the run time arg
 		 */
+		String confString;
 		if (argv.length != 1) {
-			System.err.println("Invalid usage!\nSimDriver <sim config file path>");
-			System.exit(-1);
+			// System.err.println("Invalid usage!\nSimDriver <sim config file path>");
+			// System.exit(-1);
+			confString="conf/sample_sim.conf";
+		}
+		else{
+			confString=argv[0];
 		}
 		try {
-			configFile.parseFile(argv[0]);
+			configFile.parseFile(confString);
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.exit(-1);

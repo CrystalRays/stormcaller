@@ -172,7 +172,7 @@ public class VelvetHammer extends BotMaster {
 
 		if (this.heavyLogging) {
 			try {
-				BufferedWriter tempWriter = new BufferedWriter(new FileWriter("stormcaller/logs/loaddump.txt"));
+				BufferedWriter tempWriter = new BufferedWriter(new FileWriter("logs/loaddump.txt"));
 				HashSet<Link> tempSet = new HashSet<Link>();
 				while (tempSet.size() < this.loadMap.keySet().size()) {
 					Link tempLink = this.getBiggestUntargetedLink(tempSet);
@@ -321,6 +321,7 @@ public class VelvetHammer extends BotMaster {
 		 */
 		while (searchDepth < this.depthOfSearch && this.computeBotMapBandwidth(availibleBandwidth) > Link.OC48) {
 			Link nextMaxLink = this.getBiggestUntargetedLink(lookedAtLinks);
+			if(nextMaxLink==null)break;
 			searchDepth++;
 
 			/*

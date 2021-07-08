@@ -23,7 +23,7 @@ public class SimLogger {
 	/*
 	 * The directory and extension we want to use
 	 */
-	public static final String DIR = "stormcaller/logs/";
+	public static final String DIR = "logs/";
 	public static final String EXT = ".log";
 
 	/**

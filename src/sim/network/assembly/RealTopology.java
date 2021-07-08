@@ -39,13 +39,13 @@ public class RealTopology {
 	public static final String T2T1LINKPARAM = "t2t1 size";
 	public static final String T1T1LINKPARAM = "t1t1 size";
 
-	public static final String DEFAULT_AS_FILE = "stormcaller/conf/as_rel.txt";
+	public static final String DEFAULT_AS_FILE = "conf/as_rel.txt";
 
 	public static void main(String argv[]) throws IOException{
-		RealTopology test = new RealTopology("/scratch/minerva/schuch/stormcaller/conf/as_rel.txt", true, "OC3", "OC48", "OC192", "OC768");
+		RealTopology test = new RealTopology("conf/as_rel.txt", true, "OC3", "OC48", "OC192", "OC768");
 
 		test.validateConnected();
-		test.dumpASIPToFile("/scratch/waterhouse/schuch/stormcaller/asToIP.txt");
+		test.dumpASIPToFile("conf/asToIP.txt");
 	}
 
 	public RealTopology(String asFile, boolean printInfo, String t3Size, String t2t2Size, String t2t1Size,

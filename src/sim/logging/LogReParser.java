@@ -12,7 +12,7 @@ public class LogReParser {
 	 */
 	public static void main(String[] args) throws IOException {
 		LogReParser tempParse = new LogReParser(
-				"/scratch/minerva/schuch/stormcaller/logs/250klargerlog", 175000);
+				"logs/250klargerlog", 175000);
 		//tempParse.buildRunningAvg(209);
 
 		//tempParse.buildAverages(); 
@@ -27,14 +27,14 @@ public class LogReParser {
 	}
 
 	private String fileName;
-	private long avoidTime;
+	private int avoidTime;
 	private HashMap<Integer, List<Integer>> loadedData;
 	private HashMap<Integer, List<Integer>> unsortedData;
 	private HashMap<Integer, AS> asMap;
 
 	private static final String FILE_EXT = "MA.csv";
 
-	public LogReParser(String incFile, long avoidTime) throws IOException {
+	public LogReParser(String incFile, int avoidTime) throws IOException {
 		this.fileName = incFile;
 		this.avoidTime = avoidTime;
 		this.loadedData = new HashMap<Integer, List<Integer>>();
@@ -42,7 +42,7 @@ public class LogReParser {
 		this.parseBaseFile();
 
 		//RealTopology realTopo = new RealTopology(RealTopology.DEFAULT_AS_FILE, false, "OC3", "OC48", "OC192", "OC768");
-		RealTopology realTopo = new RealTopology("/scratch/minerva/schuch/stormcaller/conf/as_rel.txt", false, "OC3", "OC48", "OC192", "OC768");
+		RealTopology realTopo = new RealTopology("conf/as_rel.txt", false, "OC3", "OC48", "OC192", "OC768");
 		this.asMap = realTopo.getASMap();
 	}
 
@@ -84,7 +84,7 @@ public class LogReParser {
 			/*
 			 * skip the time in the sim when the attack isn't running
 			 */
-			long tempTime = Long.parseLong(tempString);
+			int tempTime = Integer.parseInt(tempString);
 			if (tempTime < this.avoidTime) {
 				continue;
 			}
@@ -110,7 +110,7 @@ public class LogReParser {
 		List<Double> avgList = new LinkedList<Double>();
 		for (int tASN : this.asMap.keySet()) {
 			if (this.asMap.get(tASN).getTier() == AS.T1) {
-				long sum = 0;
+				int sum = 0;
 				List<Integer> updateList = this.loadedData.get(tASN);
 				for (int tempValue : updateList) {
 					sum += tempValue;
@@ -123,7 +123,7 @@ public class LogReParser {
 		avgList.clear();
 		for (int tASN : this.asMap.keySet()) {
 			if (this.asMap.get(tASN).getTier() == AS.T2) {
-				long sum = 0;
+				int sum = 0;
 				List<Integer> updateList = this.loadedData.get(tASN);
 				for (int tempValue : updateList) {
 					sum += tempValue;
@@ -136,7 +136,7 @@ public class LogReParser {
 		avgList.clear();
 		for (int tASN : this.asMap.keySet()) {
 			if (this.asMap.get(tASN).getTier() == AS.T3) {
-				long sum = 0;
+				int sum = 0;
 				List<Integer> updateList = this.loadedData.get(tASN);
 				for (int tempValue : updateList) {
 					sum += tempValue;
@@ -188,7 +188,7 @@ public class LogReParser {
 			System.out.println("" + asn + " is a tier " + this.asMap.get(asn).getTier());
 		}
 
-		this.writeIntCDF("/scratch/minerva/schuch/stormcaller/logs/" + asn + ".csv", this.loadedData.get(asn));
+		this.writeIntCDF("logs/" + asn + ".csv", this.loadedData.get(asn));
 	}
 
 	public void buildRunningAvg(int asn) throws IOException {

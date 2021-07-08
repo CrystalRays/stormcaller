@@ -39,8 +39,8 @@ public class ASIPParse {
 	private static final Pattern ASREL = Pattern
 			.compile("([0-9]+) ([0-9]+) ([0-9])");
 
-	private static final String ASREL_FILE = "/scratch/minerva/schuch/stormcaller/conf/as_rel.txt";
-	public static final String RIB_FILE = "/scratch/waterhouse/schuch/lci/routeViews/readable.txt";
+	private static final String ASREL_FILE = "conf/as_rel.txt";
+	public static final String RIB_FILE = "routeViews/readable.txt";
 
 	/**
 	 * Builds a mapping of ASNs to ip block weighting. At the end of this
@@ -113,7 +113,7 @@ public class ASIPParse {
 					 * Turn it into an ASN, add it to the set of ASes that "own"
 					 * the given IP block
 					 */
-					int tAS = Integer.parseInt(lastHop);
+					int tAS = (int)Long.parseLong(lastHop); //!!!! I changed Int.parseInt to Long.parseLong dueto the large lastHop
 					if (!this.blockToASMapping.containsKey(currPrefix)) {
 						this.blockToASMapping.put(currPrefix,
 								new HashSet<Integer>());
@@ -207,7 +207,7 @@ public class ASIPParse {
 					} else {
 						HashSet<Integer> nextASes = uphillASMap.get(tAS);
 						if (nextASes != null) {
-							for (int tNextAS : nextASes) {
+							for (Integer tNextAS : nextASes) {
 								if ((!next.contains(tNextAS))
 										&& (!done.contains(tNextAS))
 										&& (!poss.contains(tNextAS))) {
@@ -266,7 +266,7 @@ public class ASIPParse {
 
 		HashMap<Integer, Integer> theData = obj.getASWeighting();
 		System.out.println("sim to AS size is: " + theData.size());
-		long sum = 0;
+		int sum = 0;
 		List<Integer> medianList = new ArrayList<Integer>(theData.size());
 		for (int tAS : theData.keySet()) {
 			medianList.add(theData.get(tAS));

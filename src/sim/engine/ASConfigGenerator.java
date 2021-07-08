@@ -35,7 +35,7 @@ public class ASConfigGenerator {
 	/*
 	 * Path and extension strings
 	 */
-	public static final String IOSDIR = "stormcaller/ios/";
+	public static final String IOSDIR = "ios/";
 	public static final String IOSEXT = ".ios";
 
 	/**
