@@ -18,7 +18,7 @@ forked from https://github.com/pendgaft/stormcaller
 2. run
    ```bash
     cd routeViews
-    ./gen.sh > readable.txt
+    ./gen.sh
     ```
 3. run src/liveView/FileShiv.java
 4. run src/sim/SimDriver.java
