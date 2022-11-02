@@ -21,6 +21,6 @@ forked from https://github.com/pendgaft/stormcaller
     ./gen.sh
     ```
 3. run src/liveView/FileShiv.java
-4. run src/sim/SimDriver.java
+4. run src/sim/engine/SimDriver.java
 5. run src/liveView/LiveViewDriver.java
 6. Enjoy!
