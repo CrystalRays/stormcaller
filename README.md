@@ -1,9 +1,6 @@
 # StormCaller
 
-Core BGP Simulator
-
-forked from https://github.com/pendgaft/stormcaller
-
+the reproduction of Core BGP Simulator forked from https://github.com/pendgaft/stormcaller
 
 ## Data you need
 
